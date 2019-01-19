@@ -56,6 +56,8 @@ static void selpaste(const Arg *);
 static void zoom(const Arg *);
 static void zoomabs(const Arg *);
 static void zoomreset(const Arg *);
+static void setpalette(const Arg *);
+static void setnextpalette(const Arg *);
 
 /* config.h for applying patches and the configuration. */
 #include "config.h"
@@ -737,7 +739,7 @@ xloadcols(void)
 		for (cp = dc.col; cp < &dc.col[dc.collen]; ++cp)
 			XftColorFree(xw.dpy, xw.vis, xw.cmap, cp);
 	} else {
-		dc.collen = MAX(LEN(colorname), 256);
+		dc.collen = MAX(LEN(palettes[0]), 256);
 		dc.col = xmalloc(dc.collen * sizeof(Color));
 	}
 
@@ -1883,6 +1885,27 @@ usage(void)
 	    " [stty_args ...]\n", argv0, argv0);
 }
 
+static int currentpalette;
+
+void
+setpalette(const Arg *arg)
+{
+	if ( 0 <= arg->i && arg->i < LEN(palettes) ) {
+		colorname = palettes[arg->i];
+		currentpalette = arg->i;
+		xloadcols();
+		cresize(win.w, win.h);
+	}
+}
+
+void
+setnextpalette(const Arg *dummy)
+{
+	Arg iarg;
+	iarg.i = (currentpalette+1)%(LEN(palettes));
+	setpalette(&iarg);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -1935,6 +1958,7 @@ main(int argc, char *argv[])
 	} ARGEND;
 
 run:
+        colorname = palettes[0];
 	if (argc > 0) /* eat all remaining arguments */
 		opt_cmd = argv;
 
