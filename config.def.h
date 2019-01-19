@@ -93,35 +93,27 @@ char *termname = "st-256color";
  */
 unsigned int tabspaces = 8;
 
-/* Terminal colors (16 first used in escape sequence) */
-static const char *colorname[] = {
-	/* 8 normal colors */
-	"black",
-	"red3",
-	"green3",
-	"yellow3",
-	"blue2",
-	"magenta3",
-	"cyan3",
-	"gray90",
+/* Terminal colors (16 used in escape sequence) */
+/* 256-261 are defaultfg, defaultbg, defaultcs, defaultrcs, mousefg, mousebg. */
 
-	/* 8 bright colors */
-	"gray50",
-	"red",
-	"green",
-	"yellow",
-	"#5c5cff",
-	"magenta",
-	"cyan",
-	"white",
-
-	[255] = 0,
-
-	/* more colors can be added after 255 to use with DefaultXX */
-	"#cccccc",
-	"#555555",
-	"gray90", /* default foreground colour */
-	"black", /* default background colour */
+static const char **colorname;
+static const char *palettes[][262] = {
+  //Standard palette
+  //{"black", "red3", "green3", "yellow3", "blue2", "magenta3", "cyan3", "gray90",
+  // "gray50", "red", "green", "yellow", "#5c5cff", "magenta", "cyan", "white",
+  // [255] = 0, "white", "black", "#ff00ff", "#00cc00", "white", "black"},
+  //Translated into RGB using /usr/share/X11/rgb.txt
+  {"#000000", "#cd0000", "#00cd00", "#cdcd00", "#0000ee", "#cd00cd", "#00cdcd", "#e5e5e5",
+   "#7f7f7f", "#ff0000", "#00ff00", "#ffff00", "#5c5cff", "#ff00ff", "#00ffff", "#ffffff",
+   [255] = 0, "#ffffff", "#000000", "#ff00ff", "#00cc00", "#ffffff", "#000000"},
+  //Inverted lightness
+  {"#ffffff", "#ff3232", "#32ff32", "#ffff32", "#1111ff", "#320032", "#32ffff", "#1a1a1a",
+   "#808080", "#ff0000", "#00ff00", "#ffff00", "#0000a3", "#ff00ff", "#00ffff", "#ffffff",
+   [255] = 0, "#000000", "#ffffff", "#ff00ff", "#33ff33", "#000000", "#ffffff"},
+  //Monochrome inverted lightness
+  {"#ffffff", "#767676", "#767676", "#bbbbbb", "#606060", "#212121", "#bbbbbb", "#1a1a1a",
+   "#808080", "#555555", "#555555", "#aaaaaa", "#363636", "#aaaaaa", "#aaaaaa", "#ffffff",
+   [255] = 0, "#000000", "#ffffff", "#aaaaaa", "#777777", "#000000", "#ffffff"},
 };
 
 
@@ -129,10 +121,10 @@ static const char *colorname[] = {
  * Default colors (colorname index)
  * foreground, background, cursor, reverse cursor
  */
-unsigned int defaultfg = 258;
-unsigned int defaultbg = 259;
-unsigned int defaultcs = 256;
-static unsigned int defaultrcs = 257;
+unsigned int defaultfg = 256;
+unsigned int defaultbg = 257;
+static unsigned int defaultcs = 258;
+static unsigned int defaultrcs = 259;
 
 /*
  * Default shape of cursor
@@ -141,7 +133,7 @@ static unsigned int defaultrcs = 257;
  * 6: Bar ("|")
  * 7: Snowman ("☃")
  */
-static unsigned int cursorshape = 2;
+static unsigned int cursorshape = 6;
 
 /*
  * Default columns and rows numbers
@@ -154,8 +146,8 @@ static unsigned int rows = 24;
  * Default colour and shape of the mouse cursor
  */
 static unsigned int mouseshape = XC_xterm;
-static unsigned int mousefg = 7;
-static unsigned int mousebg = 0;
+static unsigned int mousefg = 260;
+static unsigned int mousebg = 261;
 
 /*
  * Color used to display font attributes when fontconfig selected a font which
