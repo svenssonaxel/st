@@ -184,23 +184,21 @@ static MouseShortcut mshortcuts[] = {
 };
 
 /* Internal keyboard shortcuts. */
-#define MODKEY Mod1Mask
-#define TERMMOD (ControlMask|ShiftMask)
+#define SUPERMOD  Mod4Mask
 
 static Shortcut shortcuts[] = {
-	/* mask                 keysym          function        argument */
-	{ XK_ANY_MOD,           XK_Break,       sendbreak,      {.i =  0} },
-	{ ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
-	{ ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
-	{ XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },
-	{ TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
-	{ TERMMOD,              XK_Next,        zoom,           {.f = -1} },
-	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
-	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
-	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
-	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
-	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
-	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+  /* mask    keysym   function        argument */
+  { SUPERMOD, XK_g,    sendbreak,      {.i =  0} },
+  { SUPERMOD, XK_q,    toggleprinter,  {.i =  0} },
+  { SUPERMOD, XK_w,    printscreen,    {.i =  0} },
+  { SUPERMOD, XK_e,    printsel,       {.i =  0} },
+  { SUPERMOD, XK_plus, zoom,           {.f = +1} },
+  { SUPERMOD, XK_0,    zoom,           {.f = -1} },
+  { SUPERMOD, XK_9,    zoomreset,      {.f =  0} },
+  { SUPERMOD, XK_c,    clipcopy,       {.i =  0} },
+  { SUPERMOD, XK_v,    clippaste,      {.i =  0} },
+  { SUPERMOD, XK_b,    selpaste,       {.i =  0} },
+  { SUPERMOD, XK_y,    setnextpalette, {.i =  0} },
 };
 
 /*
@@ -231,10 +229,11 @@ static Shortcut shortcuts[] = {
 static KeySym mappedkeys[] = { -1 };
 
 /*
- * State bits to ignore when matching key or button events.  By default,
- * numlock (Mod2Mask) and keyboard layout (XK_SWITCH_MOD) are ignored.
+ * State bits to ignore when matching key or button events.
+ * Keyboard layout (XK_SWITCH_MOD) is ignored.
+ * Shift is ignored since it's frequently simulated.
  */
-static uint ignoremod = Mod2Mask|XK_SWITCH_MOD;
+static uint ignoremod = ShiftMask|XK_SWITCH_MOD;
 
 /*
  * This is the huge key array which defines all compatibility to the Linux
