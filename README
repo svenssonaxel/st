@@ -1,11 +1,16 @@
 st - simple terminal
 --------------------
-st is a simple terminal emulator for X which sucks less.
+This is a fork by Axel Svensson of st, a simple terminal emulator for X.
+For the upstream version, see https://st.suckless.org
 
 
 Requirements
 ------------
 In order to build st you need the Xlib header files.
+
+On debian:
+
+    apt-get -qy install libxft-dev libxft2
 
 
 Installation
@@ -13,10 +18,18 @@ Installation
 Edit config.mk to match your local setup (st is installed into
 the /usr/local namespace by default).
 
-Afterwards enter the following command to build and install st (if
-necessary as root):
+Build and install st (if necessary as root):
 
     make clean install
+
+You may want to add st to alternatives, and select it:
+
+    update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/local/bin/st 50
+    update-alternatives --set x-terminal-emulator /usr/local/bin/st
+
+If the Delete key does not work in e.g. bash, fix it:
+
+    echo set enable-keypad on > /etc/inputrc
 
 
 Running st
