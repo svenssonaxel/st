@@ -1,5 +1,5 @@
 # st version
-VERSION = 0.8.1
+VERSION = forked.unversioned
 
 # Customize below to fit your system
 
