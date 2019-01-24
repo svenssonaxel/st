@@ -157,6 +157,7 @@ static int evrow(XEvent *);
 
 static void expose(XEvent *);
 static void visibility(XEvent *);
+static void mapping(XEvent *);
 static void unmap(XEvent *);
 static void kpress(XEvent *);
 static void cmessage(XEvent *);
@@ -183,6 +184,7 @@ static void (*handler[LASTEvent])(XEvent *) = {
 	[ClientMessage] = cmessage,
 	[ConfigureNotify] = resize,
 	[VisibilityNotify] = visibility,
+	[MappingNotify] = mapping,
 	[UnmapNotify] = unmap,
 	[Expose] = expose,
 	[FocusIn] = focus,
@@ -1568,6 +1570,13 @@ visibility(XEvent *ev)
 	XVisibilityEvent *e = &ev->xvisibility;
 
 	MODBIT(win.mode, e->state != VisibilityFullyObscured, MODE_VISIBLE);
+}
+
+void
+mapping(XEvent *ev)
+{
+	XMappingEvent *e = &ev->xmapping;
+	XRefreshKeyboardMapping(e);
 }
 
 void
