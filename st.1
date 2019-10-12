@@ -140,26 +140,35 @@ Print the full screen to the
 Print the selection to the
 .I iofile.
 .TP
-.B Super-+
+.B ZoomIn (XF86)
 Increase font size.
 .TP
-.B Super-0
+.B ZoomOut (XF86)
 Decrease font size.
 .TP
-.B Super-9
+.B Yellow (XF86)
 Reset to default font size.
 .TP
-.B Super-b
-Paste from primary selection (middle mouse button).
-.TP
-.B Super-c
+.B Copy (XF86)
 Copy the selected text to the clipboard selection.
 .TP
-.B Super-v
+.B Paste (XF86)
 Paste from the clipboard selection.
 .TP
-.B Super-y
+.B Red (XF86)
 Switch to the next color palette.
+.TP
+.B ScrollUp (XF86)
+Scroll up one line.
+.TP
+.B ScrollDown (XF86)
+Scroll down one line.
+.TP
+.B Super-ScrollUp (XF86)
+Scroll up one page minus one line.
+.TP
+.B Super-ScrollDown (XF86)
+Scroll down one page minus one line.
 .SH CUSTOMIZATION
 .B st
 can be customized by creating a custom config.h and (re)compiling the source

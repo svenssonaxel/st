@@ -187,18 +187,21 @@ static MouseShortcut mshortcuts[] = {
 #define SUPERMOD  Mod4Mask
 
 static Shortcut shortcuts[] = {
-  /* mask    keysym   function        argument */
-  { SUPERMOD, XK_g,    sendbreak,      {.i =  0} },
-  { SUPERMOD, XK_q,    toggleprinter,  {.i =  0} },
-  { SUPERMOD, XK_w,    printscreen,    {.i =  0} },
-  { SUPERMOD, XK_e,    printsel,       {.i =  0} },
-  { SUPERMOD, XK_plus, zoom,           {.f = +1} },
-  { SUPERMOD, XK_0,    zoom,           {.f = -1} },
-  { SUPERMOD, XK_9,    zoomreset,      {.f =  0} },
-  { SUPERMOD, XK_c,    clipcopy,       {.i =  0} },
-  { SUPERMOD, XK_v,    clippaste,      {.i =  0} },
-  { SUPERMOD, XK_b,    selpaste,       {.i =  0} },
-  { SUPERMOD, XK_y,    setnextpalette, {.i =  0} },
+  /*mask       keysym             function        argument */
+  { SUPERMOD,  XK_g,              sendbreak,      {.i =  0} },
+  { SUPERMOD,  XK_q,              toggleprinter,  {.i =  0} },
+  { SUPERMOD,  XK_w,              printscreen,    {.i =  0} },
+  { SUPERMOD,  XK_e,              printsel,       {.i =  0} },
+  { XK_NO_MOD, XF86XK_ZoomIn,     zoom,           {.f = +1} },
+  { XK_NO_MOD, XF86XK_ZoomOut,    zoom,           {.f = -1} },
+  { XK_NO_MOD, XF86XK_Yellow,     zoomreset,      {.f =  0} },
+  { XK_NO_MOD, XF86XK_Copy,       clipcopy,       {.i =  0} },
+  { XK_NO_MOD, XF86XK_Paste,      clippaste,      {.i =  0} },
+  { XK_NO_MOD, XF86XK_Red,        setnextpalette, {.i =  0} },
+  { XK_NO_MOD, XF86XK_ScrollUp,   kscrollup,      {.i =  1} },
+  { XK_NO_MOD, XF86XK_ScrollDown, kscrolldown,    {.i =  1} },
+  { SUPERMOD,  XF86XK_ScrollUp,   kscrollup,      {.i = -1} },
+  { SUPERMOD,  XF86XK_ScrollDown, kscrolldown,    {.i = -1} },
 };
 
 /*
