@@ -182,26 +182,34 @@ static unsigned int defaultattr = 11;
  */
 static MouseShortcut mshortcuts[] = {
 	/* button               mask            string */
-	{ Button4,              XK_ANY_MOD,     "\031" },
-	{ Button5,              XK_ANY_MOD,     "\005" },
+	//{ Button4,              XK_NO_MOD,      "\031" },
+	//{ Button5,              XK_NO_MOD,      "\005" },
+};
+
+MouseKey mkeys[] = {
+	/* button               mask            function        argument */
+	{ Button4,              XK_NO_MOD,      kscrollup,      {.i =  1} },
+	{ Button5,              XK_NO_MOD,      kscrolldown,    {.i =  1} },
 };
 
 /* Internal keyboard shortcuts. */
 #define SUPERMOD  Mod4Mask
 
 static Shortcut shortcuts[] = {
-  /* mask    keysym   function        argument */
-  { SUPERMOD, XK_g,    sendbreak,      {.i =  0} },
-  { SUPERMOD, XK_q,    toggleprinter,  {.i =  0} },
-  { SUPERMOD, XK_w,    printscreen,    {.i =  0} },
-  { SUPERMOD, XK_e,    printsel,       {.i =  0} },
-  { SUPERMOD, XK_plus, zoom,           {.f = +1} },
-  { SUPERMOD, XK_0,    zoom,           {.f = -1} },
-  { SUPERMOD, XK_9,    zoomreset,      {.f =  0} },
-  { SUPERMOD, XK_c,    clipcopy,       {.i =  0} },
-  { SUPERMOD, XK_v,    clippaste,      {.i =  0} },
-  { SUPERMOD, XK_b,    selpaste,       {.i =  0} },
-  { SUPERMOD, XK_y,    setnextpalette, {.i =  0} },
+  /*mask      keysym        function        argument */
+  { SUPERMOD, XK_g,         sendbreak,      {.i =  0} },
+  { SUPERMOD, XK_q,         toggleprinter,  {.i =  0} },
+  { SUPERMOD, XK_w,         printscreen,    {.i =  0} },
+  { SUPERMOD, XK_e,         printsel,       {.i =  0} },
+  { SUPERMOD, XK_plus,      zoom,           {.f = +1} },
+  { SUPERMOD, XK_0,         zoom,           {.f = -1} },
+  { SUPERMOD, XK_9,         zoomreset,      {.f =  0} },
+  { SUPERMOD, XK_c,         clipcopy,       {.i =  0} },
+  { SUPERMOD, XK_v,         clippaste,      {.i =  0} },
+  { SUPERMOD, XK_b,         selpaste,       {.i =  0} },
+  { SUPERMOD, XK_y,         setnextpalette, {.i =  0} },
+  { SUPERMOD, XK_Page_Up,   kscrollup,      {.i = -1} },
+  { SUPERMOD, XK_Page_Down, kscrolldown,    {.i = -1} },
 };
 
 /*
