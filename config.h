@@ -74,6 +74,17 @@ const int boxdraw_braille = 0;
  */
 static int bellvolume = 0;
 
+/*
+ * visual-bell timeout (set to 0 to disable visual-bell).
+ */
+static int vbelltimeout = 100;
+/*
+ * visual bell mode when enabled:
+ *   1: Inverse whole screen
+ *   2: Inverse outer (border) cells
+ */
+static int vbellmode = 2;
+
 /* default TERM value */
 char *termname = "st-256color";
 
