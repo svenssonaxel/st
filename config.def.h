@@ -98,14 +98,14 @@ unsigned int tabspaces = 8;
 
 static const char **colorname;
 static const char *palettes[][263] = {
-  // Dark mode
-  {"#000000", "#cd0000", "#00cd00", "#cdcd00", "#0000ee", "#cd00cd", "#00cdcd", "#e5e5e5",
-   "#7f7f7f", "#ff0000", "#00ff00", "#ffff00", "#5c5cff", "#ff00ff", "#00ffff", "#ffffff",
-   [255] = 0, "#ffffff", "#191919", "#ff0088", "#00dd00", "#ffffff", "#000000", "#fff020"},
   // Light mode
   {"#000000", "#cd0000", "#00cd00", "#cdcd00", "#0000ee", "#cd00cd", "#00cdcd", "#e5e5e5",
    "#7f7f7f", "#ff0000", "#00ff00", "#ffff00", "#5c5cff", "#ff00ff", "#00ffff", "#ffffff",
    [255] = 0, "#000000", "#e6e6e6", "#ff0088", "#00dd00", "#ffffff", "#000000", "#0000bb"},
+  // Dark mode
+  {"#000000", "#cd0000", "#00cd00", "#cdcd00", "#0000ee", "#cd00cd", "#00cdcd", "#e5e5e5",
+   "#7f7f7f", "#ff0000", "#00ff00", "#ffff00", "#5c5cff", "#ff00ff", "#00ffff", "#ffffff",
+   [255] = 0, "#ffffff", "#191919", "#ff0088", "#00dd00", "#ffffff", "#000000", "#fff020"},
 };
 
 
