@@ -1819,17 +1819,24 @@ kpress(XEvent *ev)
 	if (IS_SET(MODE_KBDLOCK))
 		return;
 
+	/* Interprete Meta as Alt */
+	unsigned int e_state = e->state;
+	if(e_state & Mod2Mask) {
+		e_state &= ~((unsigned int)Mod2Mask);
+		e_state |= Mod1Mask;
+	}
+
 	len = XmbLookupString(xw.xic, e, buf, sizeof buf, &ksym, &status);
 	/* 1. shortcuts */
 	for (bp = shortcuts; bp < shortcuts + LEN(shortcuts); bp++) {
-		if (ksym == bp->keysym && match(bp->mod, e->state)) {
+		if (ksym == bp->keysym && match(bp->mod, e_state)) {
 			bp->func(&(bp->arg));
 			return;
 		}
 	}
 
 	/* 2. custom keys from config.h */
-	if ((customkey = kmap(ksym, e->state))) {
+	if ((customkey = kmap(ksym, e_state))) {
 		ttywrite(customkey, strlen(customkey), 1);
 		return;
 	}
@@ -1837,7 +1844,7 @@ kpress(XEvent *ev)
 	/* 3. composed string from input method */
 	if (len == 0)
 		return;
-	if (len == 1 && e->state & Mod1Mask) {
+	if (len == 1 && e_state & Mod1Mask) {
 		if (IS_SET(MODE_8BIT)) {
 			if (*buf < 0177) {
 				c = *buf | 0x80;
