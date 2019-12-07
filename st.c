@@ -2668,14 +2668,14 @@ draw(void)
 
 	drawregion(0, 0, term.col, term.row);
 
-	// restore 3x3 characters around cursor
-	for(int restx=term.ocx-1; restx<=term.ocx+1; restx++)
-		for(int resty=term.ocy-1; resty<=term.ocy+1; resty++)
-			if(0 <= restx && restx < term.col && 0 <= resty && resty < term.row)
-				xrestoreglyph(restx, resty, term.line[resty][restx]);
-
-	if (term.scr == 0)
+	if (term.scr == 0) {
+		// restore 3x3 characters around cursor
+		for(int restx=term.ocx-1; restx<=term.ocx+1; restx++)
+			for(int resty=term.ocy-1; resty<=term.ocy+1; resty++)
+				if(0 <= restx && restx < term.col && 0 <= resty && resty < term.row)
+					xrestoreglyph(restx, resty, term.line[resty][restx]);
 		xdrawcursor(cx, term.c.y, term.line[term.c.y][cx]);
+	}
 	term.ocx = cx, term.ocy = term.c.y;
 	xfinishdraw();
 	xximspot(term.ocx, term.ocy);
