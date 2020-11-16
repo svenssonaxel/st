@@ -1550,8 +1550,8 @@ xdrawcursor(int cx, int cy, Glyph g)
 
 	/* draw the new one */
 	switch (IS_SET(MODE_FOCUSED) ? win.cursor : win.cursor_nonfocused) {
-	case 7: /* st extension: snowman (U+2603) */
-		g.u = 0x2603;
+	case 7: /* st extension */
+		g.u = 0x2603; /* snowman (U+2603) */
 		/* FALLTHROUGH */
 	case 0: /* Blinking Block */
 	case 1: /* Blinking Block (Default) */
@@ -1731,12 +1731,16 @@ xsetmode(int set, unsigned int flags)
 }
 
 int
-xsetcursor(int cursor)
+xsetcursor(int cursor, int cursor_nonfocused)
 {
-	DEFAULT(cursor, 1);
-	if (!BETWEEN(cursor, 0, 6))
+	if (!BETWEEN(cursor, 0, 7) && /* 7: st extension */
+	    !BETWEEN(cursor, 11, 12)) /* 11, 12: custom config.h functions */
+		return 1;
+	if (!BETWEEN(cursor_nonfocused, 0, 7) && /* 7: st extension */
+	    !BETWEEN(cursor_nonfocused, 11, 12)) /* 11, 12: custom config.h functions */
 		return 1;
 	win.cursor = cursor;
+	win.cursor_nonfocused = cursor_nonfocused;
 	return 0;
 }
 
@@ -2055,8 +2059,7 @@ main(int argc, char *argv[])
 {
 	xw.l = xw.t = 0;
 	xw.isfixed = False;
-	win.cursor = cursorshape;
-	win.cursor_nonfocused = cursorshape_nonfocused;
+	xsetcursor(cursorshape, cursorshape_nonfocused);
 
 	ARGBEGIN {
 	case 'a':
