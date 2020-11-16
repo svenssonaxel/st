@@ -116,22 +116,22 @@ static const char **colorname;
 static const char *palettes[][263] = {
   // Dark mode:
   // First 16 colors are converted from CIE L*C*h* with:
-  // - Lightness   0 5/8 5/8 5/8 5/8 5/8 5/8 5/8
-  //             7/8 7/8 7/8 7/8 7/8 7/8 7/8   1
+  // - Lightness          0 5/8 5/8 5/8 5/8 5/8 5/8 9095/10000
+  //             5320/10000 7/8 7/8 7/8 7/8 7/8 7/8          1
   // - Hue derived from RGB base colors
   // - Maximum Chroma representable in RGB, given the above (and 0 for grays).
-  {"#000000", "#fe6445", "#00af00", "#9c9c00", "#a87ffe", "#f845f6", "#00a8a8", "#979797",
-   "#dbdbdb", "#fed1c5", "#5df947", "#e2e200", "#e5d4fe", "#fecbfa", "#00f3f3", "#fefffe",
+  {"#000000", "#fe6445", "#00af00", "#9c9c00", "#a87ffe", "#f845f6", "#00a8a8", "#e5e5e5",
+   "#7f7f7f", "#fed1c5", "#5df947", "#e2e200", "#e5d4fe", "#fecbfa", "#00f3f3", "#fefffe",
    [255] = 0, "#ffffff", "#191919", "#ff0088", "#00dd00", "#ffffff", "#000000", "#e2e200"},
 
   // Light mode:
   // First 16 colors are converted from CIE L*C*h* with:
-  // - Lightness   0 3/8 3/8 3/8 3/8 3/8 3/8 3/8
-  //             5/8 5/8 5/8 5/8 5/8 5/8 5/8   1
+  // - Lightness          0 3/8 3/8 3/8 3/8 3/8 3/8  6595/10000
+  //             2820/10000 5/8 5/8 5/8 5/8 5/8 5/8           1
   // - Hue derived from RGB base colors
   // - Maximum Chroma representable in RGB, given the above (and 0 for grays).
-  {"#000000", "#b40000", "#006700", "#5b5b00", "#5833de", "#9e009e", "#006262", "#585858",
-   "#979797", "#fe6445", "#00af00", "#9c9c00", "#a87ffe", "#f845f6", "#00a8a8", "#fefffe",
+  {"#000000", "#b40000", "#006700", "#5b5b00", "#5833de", "#9e009e", "#006262", "#a0a0a0",
+   "#424242", "#fe6445", "#00af00", "#9c9c00", "#a87ffe", "#f845f6", "#00a8a8", "#fefffe",
    [255] = 0, "#000000", "#e6e6e6", "#ff0088", "#00dd00", "#ffffff", "#000000", "#5833de"},
 };
 
