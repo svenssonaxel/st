@@ -1750,11 +1750,9 @@ xsetcursor(int cursor, int cursor_nonfocused)
 	if (!BETWEEN(cursor, 0, 7) && /* 7: st extension */
 	    !BETWEEN(cursor, 11, 12)) /* 11, 12: custom config.h functions */
 		return 1;
-	if (!BETWEEN(cursor_nonfocused, 0, 7) && /* 7: st extension */
-	    !BETWEEN(cursor_nonfocused, 11, 12)) /* 11, 12: custom config.h functions */
-		return 1;
 	win.cursor = cursor;
-	win.cursor_nonfocused = cursor_nonfocused;
+	if (cursor_nonfocused != -1)
+		win.cursor_nonfocused = cursor_nonfocused;
 	return 0;
 }
 

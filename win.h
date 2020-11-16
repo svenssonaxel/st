@@ -33,7 +33,7 @@ void xloadcols(void);
 int xsetcolorname(int, const char *);
 void xseticontitle(char *);
 void xsettitle(char *);
-int xsetcursor(int);
+int xsetcursor(int, int);
 void xsetmode(int, unsigned int);
 void xsetpointermotion(int);
 void xsetsel(char *);
