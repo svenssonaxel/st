@@ -84,9 +84,10 @@ static int bellvolume = 0;
 static int vbelltimeout = 150;
 
 /* choose predefined visual-bell cells to inverse, or define your own logic */
-#define VBCELL x==0 || x==right || y==0 || y==bottom  /* border */
+// #define VBCELL x==0 || x==right || y==0 || y==bottom  /* border */
 // #define VBCELL 1  /* all cells - whole screen */
 // #define VBCELL y==bottom && x>right-2  /* bottom-right */
+#define VBCELL y==0 || y==bottom  /* top and bottom */
 
 /* default TERM value */
 char *termname = "st-256color";
