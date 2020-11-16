@@ -76,20 +76,11 @@ static int bellvolume = 0;
  */
 static int vbelltimeout = 100;
 /*
- * visual bell mode.
- * when visual-bell is enabled, it determines what cells are inverted.
- * It contains nine flags that mean (in octal):
- *   0400: Cell in top-left corner
- *   0200: Top row except corners
- *   0100: Cell in top-right corner
- *   0040: Left column except corners
- *   0020: All except outer (border) cells
- *   0010: Right column except corners
- *   0004: Cell in bottom-left corner
- *   0002: Bottom row except corners
- *   0001: Cell in bottom-right corner
+ * visual bell mode when enabled:
+ *   1: Inverse whole screen
+ *   2: Inverse outer (border) cells
  */
-static int vbellmode = 0707;
+static int vbellmode = 2;
 
 /* default TERM value */
 char *termname = "st-256color";

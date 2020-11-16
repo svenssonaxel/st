@@ -1759,16 +1759,12 @@ xseturgency(int add)
 int
 isvbellcell(int x, int y)
 {
-	int section = 0020;
-	if (x == 0)
-		section <<= 1;
-	if (y == 0)
-		section <<= 3;
-	if (x == win.tw / win.cw - 1)
-		section >>= 1;
-	if (y == win.th / win.ch - 1)
-		section >>= 3;
-	return section & vbellmode;
+	if (vbellmode == 1)
+		return 1;
+	if (vbellmode == 2)
+		return y == 0 || y == win.th / win.ch - 1 ||
+		       x == 0 || x == win.tw / win.cw - 1;
+	return 0;
 }
 
 void
