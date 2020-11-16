@@ -39,7 +39,7 @@
 
 /* macros */
 #define IS_SET(flag)		((term.mode & (flag)) != 0)
-#define ISCONTROLC0(c)		(BETWEEN(c, 0, 0x1f) || (c) == '\177')
+#define ISCONTROLC0(c)		(BETWEEN(c, 0, 0x1f) || (c) == 0x7f)
 #define ISCONTROLC1(c)		(BETWEEN(c, 0x80, 0x9f))
 #define ISCONTROL(c)		(ISCONTROLC0(c) || ISCONTROLC1(c))
 #define ISDELIM(u)		(u && wcschr(worddelimiters, u))
@@ -738,7 +738,7 @@ sigchld(int a)
 		die("child exited with status %d\n", WEXITSTATUS(stat));
 	else if (WIFSIGNALED(stat))
 		die("child terminated due to signal %d\n", WTERMSIG(stat));
-	exit(0);
+	_exit(0);
 }
 
 void
@@ -2110,7 +2110,7 @@ tdumpline(int n)
 	bp = &term.line[n][0];
 	end = &bp[MIN(tlinelen(n), term.col) - 1];
 	if (bp != end || bp->u != ' ') {
-		for ( ;bp <= end; ++bp)
+		for ( ; bp <= end; ++bp)
 			tprinter(buf, utf8encode(bp->u, buf));
 	}
 	tprinter("\n", 1);
@@ -2240,6 +2240,7 @@ tcontrolcode(uchar ascii)
 		return;
 	case '\032': /* SUB */
 		tsetchar('?', &term.c.attr, term.c.x, term.c.y);
+		/* FALLTHROUGH */
 	case '\030': /* CAN */
 		csireset();
 		break;
@@ -2394,15 +2395,13 @@ tputc(Rune u)
 	Glyph *gp;
 
 	control = ISCONTROL(u);
-	if (!IS_SET(MODE_UTF8) && !IS_SET(MODE_SIXEL)) {
+	if (u < 127 || !IS_SET(MODE_UTF8 | MODE_SIXEL)) {
 		c[0] = u;
 		width = len = 1;
 	} else {
 		len = utf8encode(u, c);
-		if (!control && (width = wcwidth(u)) == -1) {
-			memcpy(c, "\357\277\275", 4); /* UTF_INVALID */
+		if (!control && (width = wcwidth(u)) == -1)
 			width = 1;
-		}
 	}
 
 	if (IS_SET(MODE_PRINT))
