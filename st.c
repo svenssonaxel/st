@@ -1520,13 +1520,13 @@ tsetattr(int *attr, int l)
 			break;
 		default:
 			if (BETWEEN(attr[i], 30, 37)) {
-				term.c.attr.fg = attr[i] - 30;
+				term.c.attr.fg = attr[i] - 30 + 0x100;
 			} else if (BETWEEN(attr[i], 40, 47)) {
-				term.c.attr.bg = attr[i] - 40;
+				term.c.attr.bg = attr[i] - 40 + 0x110;
 			} else if (BETWEEN(attr[i], 90, 97)) {
-				term.c.attr.fg = attr[i] - 90 + 8;
+				term.c.attr.fg = attr[i] - 90 + 0x108;
 			} else if (BETWEEN(attr[i], 100, 107)) {
-				term.c.attr.bg = attr[i] - 100 + 8;
+				term.c.attr.bg = attr[i] - 100 + 0x118;
 			} else {
 				fprintf(stderr,
 					"erresc(default): gfx attr %d unknown\n",
