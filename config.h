@@ -156,7 +156,7 @@ static const char *palettes[][0x127] = {
    "#00dd00", // defaultrcs
    "#ffffff", // mousefg
    "#000000", // mousebg
-   "#ffff00", // defaultcontrastfg
+   "#ffff00", // contrastfg
   },
 
    // Light mode:
@@ -201,7 +201,7 @@ static const char *palettes[][0x127] = {
    "#00dd00", // defaultrcs
    "#ffffff", // mousefg
    "#000000", // mousebg
-   "#0000ff", // defaultcontrastfg
+   "#0000ff", // contrastfg
   },
 
 };
@@ -213,7 +213,7 @@ static const char *palettes[][0x127] = {
  */
 unsigned int defaultfg = 0x120;
 unsigned int defaultbg = 0x121;
-unsigned int defaultcontrastfg = 0x126;
+unsigned int contrastfg = 0x126;
 static unsigned int defaultcs = 0x122;
 static unsigned int defaultrcs = 0x123;
 

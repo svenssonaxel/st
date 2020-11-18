@@ -1303,6 +1303,19 @@ tsetchar(Rune u, Glyph *attr, int x, int y)
 
 	if (isboxdraw(u))
 		term.line[y][x].mode |= ATTR_BOXDRAW;
+
+	// A glyph with default fg/bg colors that is both bold and faint is
+	// displayed with contrastfg color
+	if (attr->fg == defaultfg &&
+	    attr->bg == defaultbg &&
+	    attr->mode & ATTR_BOLD &&
+	    attr->mode & ATTR_FAINT &&
+	    !(attr->mode & ATTR_REVERSE)) {
+		term.line[y][x].fg = contrastfg;
+		term.line[y][x].mode &= ~ATTR_BOLD;
+		term.line[y][x].mode &= ~ATTR_FAINT;
+	}
+
 }
 
 void
@@ -1514,9 +1527,6 @@ tsetattr(int *attr, int l)
 			break;
 		case 49:
 			term.c.attr.bg = defaultbg;
-			break;
-		case 177:
-			term.c.attr.fg = defaultcontrastfg;
 			break;
 		default:
 			if (BETWEEN(attr[i], 30, 37)) {
