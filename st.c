@@ -1215,6 +1215,19 @@ tsetchar(Rune u, const Glyph *attr, int x, int y)
 	term.dirty[y] = 1;
 	term.line[y][x] = *attr;
 	term.line[y][x].u = u;
+
+	// A glyph with default fg/bg colors that is both bold and faint is
+	// displayed with contrastfg color
+	if (attr->fg == defaultfg &&
+	    attr->bg == defaultbg &&
+	    attr->mode & ATTR_BOLD &&
+	    attr->mode & ATTR_FAINT &&
+	    !(attr->mode & ATTR_REVERSE)) {
+		term.line[y][x].fg = contrastfg;
+		term.line[y][x].mode &= ~ATTR_BOLD;
+		term.line[y][x].mode &= ~ATTR_FAINT;
+	}
+
 }
 
 void
@@ -1426,9 +1439,6 @@ tsetattr(const int *attr, int l)
 			break;
 		case 49:
 			term.c.attr.bg = defaultbg;
-			break;
-		case 177:
-			term.c.attr.fg = defaultcontrastfg;
 			break;
 		default:
 			if (BETWEEN(attr[i], 30, 37)) {

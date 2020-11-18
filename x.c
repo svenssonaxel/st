@@ -1414,12 +1414,6 @@ xdrawglyphfontspecs(const XftGlyphFontSpec *specs, Glyph base, int len, int x, i
 		bg = &dc.col[base.bg];
 	}
 
-	if ((fg == &dc.col[defaultcontrastfg]) &&
-	    (IS_SET(MODE_REVERSE) ||
-	     base.mode & ATTR_REVERSE)) {
-		fg = &dc.col[defaultfg];
-	}
-
 	if (IS_SET(MODE_REVERSE)) {
 		if (fg == &dc.col[defaultfg]) {
 			fg = &dc.col[defaultbg];
