@@ -205,7 +205,7 @@ static void tfulldirt(void);
 static void tcontrolcode(uchar );
 static void tdectest(char );
 static void tdefutf8(char);
-static int32_t tdefcolor(int *, int *, int);
+static int32_t tdefcolor(int *, int *, int, int);
 static void tdeftran(char);
 static void tstrsequence(uchar);
 
@@ -1397,7 +1397,7 @@ tdeleteline(int n)
 }
 
 int32_t
-tdefcolor(int *attr, int *npar, int l)
+tdefcolor(int *attr, int *npar, int l, int is_fg)
 {
 	int32_t idx = -1;
 	uint r, g, b;
@@ -1430,8 +1430,12 @@ tdefcolor(int *attr, int *npar, int l)
 		*npar += 2;
 		if (!BETWEEN(attr[*npar], 0, 255))
 			fprintf(stderr, "erresc: bad fgcolor %d\n", attr[*npar]);
-		else
+		else {
 			idx = attr[*npar];
+			// We don't use colorname indexes 0-16.
+			if (BETWEEN(attr[*npar], 0, 15))
+				idx += is_fg ? 0x100 : 0x110;
+		}
 		break;
 	case 0: /* implemented defined (only foreground) */
 	case 1: /* transparent */
@@ -1515,20 +1519,21 @@ tsetattr(int *attr, int l)
 			term.c.attr.mode &= ~ATTR_STRUCK;
 			break;
 		case 38:
-			if ((idx = tdefcolor(attr, &i, l)) >= 0)
+			if ((idx = tdefcolor(attr, &i, l, 1)) >= 0)
 				term.c.attr.fg = idx;
 			break;
 		case 39:
 			term.c.attr.fg = defaultfg;
 			break;
 		case 48:
-			if ((idx = tdefcolor(attr, &i, l)) >= 0)
+			if ((idx = tdefcolor(attr, &i, l, 0)) >= 0)
 				term.c.attr.bg = idx;
 			break;
 		case 49:
 			term.c.attr.bg = defaultbg;
 			break;
 		default:
+			// We don't use colorname indexes 0-16.
 			if (BETWEEN(attr[i], 30, 37)) {
 				term.c.attr.fg = attr[i] - 30 + 0x100;
 			} else if (BETWEEN(attr[i], 40, 47)) {
