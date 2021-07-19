@@ -154,10 +154,18 @@ void xdrawcustomcursor1(int x, int y, int cw, int ch) {
 	// within the 3x3 character box centered on point, i.e. the box starting
 	// at (x-cw,y-ch) having size(cw*3,ch*3).
 
-	for(int d=0; d < ch/2; d++) {
+	for(int d=0; d < ch/3; d++) {
 		int dd=round((((float)d)*(cw-1))/(ch-1));
-		xdrawrect(x-dd, y-d-1, dd*2+1, 1);
-		xdrawrect(x-dd, y+ch+d, dd*2+1, 1);
+		if(dd < cursorthickness) {
+			xdrawrect(x-dd, y-d-1, dd*2+1, 1);
+			xdrawrect(x-dd, y+ch+d, dd*2+1, 1);
+		}
+		else {
+			xdrawrect(x-dd, y-d-1, cursorthickness, 1);
+			xdrawrect(x+dd+1-cursorthickness, y-d-1, cursorthickness, 1);
+			xdrawrect(x-dd, y+ch+d, cursorthickness, 1);
+			xdrawrect(x+dd+1-cursorthickness, y+ch+d, cursorthickness, 1);
+		}
 	}
 }
 
