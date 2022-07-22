@@ -214,7 +214,7 @@ static const char *palettes[][0x127] = {
 unsigned int defaultfg = 0x120;
 unsigned int defaultbg = 0x121;
 unsigned int contrastfg = 0x126;
-static unsigned int defaultcs = 0x122;
+unsigned int defaultcs = 0x122;
 static unsigned int defaultrcs = 0x123;
 
 /*
