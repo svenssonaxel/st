@@ -74,13 +74,14 @@ const int boxdraw_bold = 1;
 /* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
 const int boxdraw_braille = 0;
 
-/*
- * bell volume. It must be a value between -100 and 100. Use 0 for disabling
- * it
- */
-static int bellvolume = 0;
+/* logic for when bell is enabled */
+#define BELLENABLED (!IS_SET(MODE_VISIBLE))
+/* bell volume. It must be a value between -100 and 100. */
+static int bellvolume = 100;
 
-/* visual-bell timeout in ms (0 to disable visual-bell) */
+/* logic for when visual-bell is enabled */
+#define VBELLENABLED (!BELLENABLED)
+/* visual-bell timeout in ms */
 static int vbelltimeout = 150;
 
 /* choose predefined visual-bell cells to inverse, or define your own logic */
