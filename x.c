@@ -1763,6 +1763,7 @@ visibility(XEvent *ev)
 	XVisibilityEvent *e = &ev->xvisibility;
 
 	MODBIT(win.mode, e->state != VisibilityFullyObscured, MODE_VISIBLE);
+	MODBIT(win.mode, e->state == VisibilityUnobscured, MODE_FULLY_VISIBLE);
 }
 
 void
@@ -1776,6 +1777,7 @@ void
 unmap(XEvent *ev)
 {
 	win.mode &= ~MODE_VISIBLE;
+	win.mode &= ~MODE_FULLY_VISIBLE;
 }
 
 void

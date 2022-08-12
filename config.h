@@ -75,12 +75,12 @@ const int boxdraw_bold = 1;
 const int boxdraw_braille = 0;
 
 /* logic for when bell is enabled */
-#define BELLENABLED (!IS_SET(MODE_VISIBLE))
+#define BELLENABLED (!IS_SET(MODE_FULLY_VISIBLE))
 /* bell volume. It must be a value between -100 and 100. */
 static int bellvolume = 100;
 
 /* logic for when visual-bell is enabled */
-#define VBELLENABLED (!BELLENABLED)
+#define VBELLENABLED (IS_SET(MODE_VISIBLE))
 /* visual-bell timeout in ms */
 static int vbelltimeout = 150;
 
