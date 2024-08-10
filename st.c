@@ -1209,8 +1209,11 @@ kscrolldown(const Arg* a)
 {
     int n = a->i;
 
-    if (!term.scr || IS_SET(MODE_ALTSCREEN))
+    if (!term.scr || IS_SET(MODE_ALTSCREEN)) {
+        if (n != 0)
+            xbell();
         return;
+    }
 
     if (n < 0)
         n = MAX(term.row / -n, 1);
@@ -1233,8 +1236,11 @@ kscrollup(const Arg* a)
 {
     int n = a->i;
 
-    if (!term.histf || IS_SET(MODE_ALTSCREEN))
+    if (!term.histf || IS_SET(MODE_ALTSCREEN)) {
+        if (n != 0)
+            xbell();
         return;
+    }
 
     if (n < 0)
         n = MAX(term.row / -n, 1);
@@ -1244,6 +1250,8 @@ kscrollup(const Arg* a)
     } else {
         n = term.histf - term.scr;
         term.scr = term.histf;
+        if (n == 0)
+            xbell();
     }
 
     if (sel.ob.x != -1 && !sel.alt)
