@@ -76,6 +76,9 @@ static int bellvolume = 0;
 /* default TERM value */
 char *termname = "st-256color";
 
+/* default X11 class name unless overridden by -c */
+char *default_class = "st";
+
 /*
  * spaces per tab
  *
