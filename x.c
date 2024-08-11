@@ -88,6 +88,7 @@ typedef struct {
 	int cw; /* char width  */
 	int mode; /* window state/mode flags */
 	int cursor; /* cursor style */
+	int cursor_nonfocused; /* cursor style for unfocused window */
 } TermWindow;
 
 typedef struct {
@@ -1528,15 +1529,21 @@ xdrawglyph(Glyph g, int x, int y)
 }
 
 void
-xdrawcursor(int cx, int cy, Glyph g, int ox, int oy, Glyph og)
+xrestoreglyph(int ox, int oy, Glyph og)
 {
-	Color drawcol;
-
-	/* remove the old cursor */
 	if (selected(ox, oy))
 		og.mode ^= ATTR_REVERSE;
 	xdrawglyph(og, ox, oy);
+}
 
+Color drawcol;
+void xdrawrect(int x, int y, int w, int h) {
+	XftDrawRect(xw.draw, &drawcol, x, y, w, h);
+}
+
+void
+xdrawcursor(int cx, int cy, Glyph g)
+{
 	if (IS_SET(MODE_HIDE))
 		return;
 
@@ -1567,49 +1574,60 @@ xdrawcursor(int cx, int cy, Glyph g, int ox, int oy, Glyph og)
 	}
 
 	/* draw the new one */
-	if (IS_SET(MODE_FOCUSED)) {
-		switch (win.cursor) {
-		case 7: /* st extension */
-			g.u = 0x2603; /* snowman (U+2603) */
-			/* FALLTHROUGH */
-		case 0: /* Blinking Block */
-		case 1: /* Blinking Block (Default) */
-		case 2: /* Steady Block */
-			xdrawglyph(g, cx, cy);
-			break;
-		case 3: /* Blinking Underline */
-		case 4: /* Steady Underline */
-			XftDrawRect(xw.draw, &drawcol,
-					borderpx + cx * win.cw,
-					borderpx + (cy + 1) * win.ch - \
-						cursorthickness,
-					win.cw, cursorthickness);
-			break;
-		case 5: /* Blinking bar */
-		case 6: /* Steady bar */
-			XftDrawRect(xw.draw, &drawcol,
-					borderpx + cx * win.cw,
-					borderpx + cy * win.ch,
-					cursorthickness, win.ch);
-			break;
-		}
-	} else {
+	switch (IS_SET(MODE_FOCUSED) ? win.cursor : win.cursor_nonfocused) {
+	case 7: /* st extension */
+		g.u = 0x2603; /* snowman (U+2603) */
+		/* FALLTHROUGH */
+	case 0: /* Blinking Block */
+	case 1: /* Blinking Block (Default) */
+	case 2: /* Steady Block */
+		xdrawglyph(g, cx, cy);
+		break;
+	case 3: /* Blinking Underline */
+	case 4: /* Steady Underline */
 		XftDrawRect(xw.draw, &drawcol,
-				borderpx + cx * win.cw,
-				borderpx + cy * win.ch,
-				win.cw - 1, 1);
+			    borderpx + cx * win.cw,
+			    borderpx + (cy + 1) * win.ch - \
+			    cursorthickness,
+			    win.cw, cursorthickness);
+		break;
+	case 5: /* Blinking bar */
+	case 6: /* Steady bar */
 		XftDrawRect(xw.draw, &drawcol,
-				borderpx + cx * win.cw,
-				borderpx + cy * win.ch,
-				1, win.ch - 1);
+			    borderpx + cx * win.cw,
+			    borderpx + cy * win.ch,
+			    cursorthickness, win.ch);
+		break;
+	case 8: // Frame (1px)
 		XftDrawRect(xw.draw, &drawcol,
-				borderpx + (cx + 1) * win.cw - 1,
-				borderpx + cy * win.ch,
-				1, win.ch - 1);
+			    borderpx + cx * win.cw,
+			    borderpx + cy * win.ch,
+			    win.cw - 1, 1);
 		XftDrawRect(xw.draw, &drawcol,
-				borderpx + cx * win.cw,
-				borderpx + (cy + 1) * win.ch - 1,
-				win.cw, 1);
+			    borderpx + cx * win.cw,
+			    borderpx + cy * win.ch,
+			    1, win.ch - 1);
+		XftDrawRect(xw.draw, &drawcol,
+			    borderpx + (cx + 1) * win.cw - 1,
+			    borderpx + cy * win.ch,
+			    1, win.ch - 1);
+		XftDrawRect(xw.draw, &drawcol,
+			    borderpx + cx * win.cw,
+			    borderpx + (cy + 1) * win.ch - 1,
+			    win.cw, 1);
+		break;
+	case 11: // Custom cursor 1
+		xdrawcustomcursor1(borderpx + cx * win.cw,
+				   borderpx + cy * win.ch,
+				   win.cw,
+				   win.ch);
+		break;
+	case 12: // Custom cursor 2
+		xdrawcustomcursor2(borderpx + cx * win.cw,
+				   borderpx + cy * win.ch,
+				   win.cw,
+				   win.ch);
+		break;
 	}
 }
 
@@ -1779,7 +1797,11 @@ xsetmode(int set, unsigned int flags)
 int
 xsetcursor(int cursor)
 {
-	if (!BETWEEN(cursor, 0, 7)) /* 7: st extension */
+	if (!BETWEEN(cursor, 0, 7) /* 7: st extension */
+            && cursor != 8
+            && cursor != 11
+            && cursor != 12
+            )
 		return 1;
 	win.cursor = cursor;
 	return 0;
@@ -2115,6 +2137,7 @@ main(int argc, char *argv[])
 	xw.l = xw.t = 0;
 	xw.isfixed = False;
 	xsetcursor(cursorshape);
+	win.cursor_nonfocused = cursorshape_nonfocused;
 
 	ARGBEGIN {
 	case 'a':

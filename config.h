@@ -65,7 +65,7 @@ static unsigned int blinktimeout = 800;
 /*
  * thickness of underline and bar cursors
  */
-static unsigned int cursorthickness = 2;
+static unsigned int cursorthickness = 3;
 
 /*
  * 1: render most of the lines/blocks characters without using the font for
@@ -232,8 +232,37 @@ static unsigned int defaultrcs = 0x123;
  * 4: Underline ("_")
  * 6: Bar ("|")
  * 7: Snowman ("☃")
+ * 8: Frame (1px)
+ * 11: Custom Cursor 1
+ * 12: Custom Cursor 2
  */
-static unsigned int cursorshape = 6;
+static unsigned int cursorshape = 11;
+static unsigned int cursorshape_nonfocused = 4;
+
+void xdrawrect(int x, int y, int w, int h);
+void xdrawcustomcursor1(int x, int y, int cw, int ch) {
+	// (x,y) is the top-left corner of the character at point, and (cw,ch)
+	// is the size of a character. Use calls to xdrawrect to draw the cursor
+	// within the 3x3 character box centered on point, i.e. the box starting
+	// at (x-cw,y-ch) having size(cw*3,ch*3).
+
+	for(int d=0; d < ch/3; d++) {
+		int dd=round((((float)d)*(cw-1))/(ch-1));
+		if(dd < cursorthickness) {
+			xdrawrect(x-dd, y-d-1, dd*2+1, 1);
+			xdrawrect(x-dd, y+ch+d, dd*2+1, 1);
+		}
+		else {
+			xdrawrect(x-dd, y-d-1, cursorthickness, 1);
+			xdrawrect(x+dd+1-cursorthickness, y-d-1, cursorthickness, 1);
+			xdrawrect(x-dd, y+ch+d, cursorthickness, 1);
+			xdrawrect(x+dd+1-cursorthickness, y+ch+d, cursorthickness, 1);
+		}
+	}
+}
+
+void xdrawcustomcursor2(int x, int y, int cw, int ch) {
+}
 
 /*
  * Default columns and rows numbers
