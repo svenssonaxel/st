@@ -125,40 +125,50 @@ and all the remaining arguments are used as a command
 even without it.
 .SH SHORTCUTS
 .TP
-.B Break
+.B Super-g
 Send a break in the serial line.
-Break key is obtained in PC keyboards
-pressing at the same time control and pause.
 .TP
-.B Ctrl-Print Screen
+.B Super-q
 Toggle if st should print to the
 .I iofile.
 .TP
-.B Shift-Print Screen
+.B Super-w
 Print the full screen to the
 .I iofile.
 .TP
-.B Print Screen
+.B Super-e
 Print the selection to the
 .I iofile.
 .TP
-.B Ctrl-Shift-Page Up
+.B ZoomIn (XF86)
 Increase font size.
 .TP
-.B Ctrl-Shift-Page Down
+.B ZoomOut (XF86)
 Decrease font size.
 .TP
-.B Ctrl-Shift-Home
+.B Yellow (XF86)
 Reset to default font size.
 .TP
-.B Ctrl-Shift-y
-Paste from primary selection (middle mouse button).
-.TP
-.B Ctrl-Shift-c
+.B Copy (XF86)
 Copy the selected text to the clipboard selection.
 .TP
-.B Ctrl-Shift-v
+.B Paste (XF86)
 Paste from the clipboard selection.
+.TP
+.B Red (XF86)
+Switch to the next color palette.
+.TP
+.B ScrollUp (XF86)
+Scroll up one line.
+.TP
+.B ScrollDown (XF86)
+Scroll down one line.
+.TP
+.B Super-ScrollUp (XF86)
+Scroll up one page minus one line.
+.TP
+.B Super-ScrollDown (XF86)
+Scroll down one page minus one line.
 .SH CUSTOMIZATION
 .B st
 can be customized by creating a custom config.h and (re)compiling the source
