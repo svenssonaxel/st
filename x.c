@@ -60,6 +60,8 @@ static void zoom(const Arg *);
 static void zoomabs(const Arg *);
 static void zoomreset(const Arg *);
 static void ttysend(const Arg *);
+static void setpalette(const Arg *);
+static void setnextpalette(const Arg *);
 
 /* config.h for applying patches and the configuration. */
 #include "config.h"
@@ -803,11 +805,11 @@ xloadcols(void)
 		for (cp = dc.col; cp < &dc.col[dc.collen]; ++cp)
 			XftColorFree(xw.dpy, xw.vis, xw.cmap, cp);
 	} else {
-		dc.collen = MAX(LEN(colorname), 256);
+		dc.collen = MAX(LEN(palettes[0]), 0x120);
 		dc.col = xmalloc(dc.collen * sizeof(Color));
 	}
 
-	for (i = 0; i < dc.collen; i++)
+	for (i = 16; i < dc.collen; i++)
 		if (!xloadcolor(i, NULL, &dc.col[i])) {
 			if (colorname[i])
 				die("could not allocate color '%s'\n", colorname[i]);
@@ -1413,10 +1415,6 @@ xdrawglyphfontspecs(const XftGlyphFontSpec *specs, Glyph base, int len, int x, i
 	} else {
 		bg = &dc.col[base.bg];
 	}
-
-	/* Change basic system colors [0-7] to bright system colors [8-15] */
-	if ((base.mode & ATTR_BOLD_FAINT) == ATTR_BOLD && BETWEEN(base.fg, 0, 7))
-		fg = &dc.col[base.fg + 8];
 
 	if (IS_SET(MODE_REVERSE)) {
 		if (fg == &dc.col[defaultfg]) {
@@ -2042,6 +2040,27 @@ usage(void)
 	    " [stty_args ...]\n", argv0, argv0);
 }
 
+static int currentpalette;
+
+void
+setpalette(const Arg *arg)
+{
+	if ( 0 <= arg->i && arg->i < LEN(palettes) ) {
+		colorname = palettes[arg->i];
+		currentpalette = arg->i;
+		xloadcols();
+		cresize(win.w, win.h);
+	}
+}
+
+void
+setnextpalette(const Arg *dummy)
+{
+	Arg iarg;
+	iarg.i = (currentpalette+1)%(LEN(palettes));
+	setpalette(&iarg);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -2094,6 +2113,7 @@ main(int argc, char *argv[])
 	} ARGEND;
 
 run:
+        colorname = palettes[0];
 	if (argc > 0) /* eat all remaining arguments */
 		opt_cmd = argv;
 

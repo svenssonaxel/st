@@ -236,7 +236,7 @@ static void tfulldirt(void);
 static void tcontrolcode(uchar );
 static void tdectest(char );
 static void tdefutf8(char);
-static int32_t tdefcolor(const int *, int *, int);
+static int32_t tdefcolor(const int *, int *, int, int);
 static void tdeftran(char);
 static void tstrsequence(uchar);
 
@@ -1459,6 +1459,20 @@ tsetchar(Rune u, const Glyph *attr, int x, int y)
     term.line[y][x] = *attr;
     term.line[y][x].u = u;
     term.line[y][x].mode |= ATTR_SET;
+
+    // A glyph with default fg/bg colors that is both bold and faint is
+    // displayed with contrastfg color
+    if (attr->fg == defaultfg &&
+        attr->bg == defaultbg &&
+        attr->mode & ATTR_BOLD &&
+        attr->mode & ATTR_FAINT &&
+        !(attr->mode & ATTR_REVERSE))
+    {
+        term.line[y][x].fg = contrastfg;
+        term.line[y][x].mode &= ~ATTR_BOLD;
+        term.line[y][x].mode &= ~ATTR_FAINT;
+    }
+
 }
 
 
@@ -1550,7 +1564,7 @@ tdeleteline(int n)
 }
 
 int32_t
-tdefcolor(const int *attr, int *npar, int l)
+tdefcolor(const int *attr, int *npar, int l, int is_fg)
 {
 	int32_t idx = -1;
 	uint r, g, b;
@@ -1583,8 +1597,12 @@ tdefcolor(const int *attr, int *npar, int l)
 		*npar += 2;
 		if (!BETWEEN(attr[*npar], 0, 255))
 			fprintf(stderr, "erresc: bad fgcolor %d\n", attr[*npar]);
-		else
+		else {
 			idx = attr[*npar];
+			// We don't use colorname indexes 0-16.
+			if (BETWEEN(attr[*npar], 0, 15))
+				idx += is_fg ? 0x100 : 0x110;
+		}
 		break;
 	case 0: /* implemented defined (only foreground) */
 	case 1: /* transparent */
@@ -1668,28 +1686,29 @@ tsetattr(const int *attr, int l)
 			term.c.attr.mode &= ~ATTR_STRUCK;
 			break;
 		case 38:
-			if ((idx = tdefcolor(attr, &i, l)) >= 0)
+			if ((idx = tdefcolor(attr, &i, l, 1)) >= 0)
 				term.c.attr.fg = idx;
 			break;
 		case 39:
 			term.c.attr.fg = defaultfg;
 			break;
 		case 48:
-			if ((idx = tdefcolor(attr, &i, l)) >= 0)
+			if ((idx = tdefcolor(attr, &i, l, 0)) >= 0)
 				term.c.attr.bg = idx;
 			break;
 		case 49:
 			term.c.attr.bg = defaultbg;
 			break;
 		default:
+			// We don't use colorname indexes 0-16.
 			if (BETWEEN(attr[i], 30, 37)) {
-				term.c.attr.fg = attr[i] - 30;
+				term.c.attr.fg = attr[i] - 30 + 0x100;
 			} else if (BETWEEN(attr[i], 40, 47)) {
-				term.c.attr.bg = attr[i] - 40;
+				term.c.attr.bg = attr[i] - 40 + 0x110;
 			} else if (BETWEEN(attr[i], 90, 97)) {
-				term.c.attr.fg = attr[i] - 90 + 8;
+				term.c.attr.fg = attr[i] - 90 + 0x108;
 			} else if (BETWEEN(attr[i], 100, 107)) {
-				term.c.attr.bg = attr[i] - 100 + 8;
+				term.c.attr.bg = attr[i] - 100 + 0x118;
 			} else {
 				fprintf(stderr,
 					"erresc(default): gfx attr %d unknown\n",

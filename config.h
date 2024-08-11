@@ -96,46 +96,113 @@ char *default_class = "st";
  */
 unsigned int tabspaces = 8;
 
-/* Terminal colors (16 first used in escape sequence) */
-static const char *colorname[] = {
-	/* 8 normal colors */
-	"black",
-	"red3",
-	"green3",
-	"yellow3",
-	"blue2",
-	"magenta3",
-	"cyan3",
-	"gray90",
+/* Terminal colors (16 used in escape sequence) */
 
-	/* 8 bright colors */
-	"gray50",
-	"red",
-	"green",
-	"yellow",
-	"#5c5cff",
-	"magenta",
-	"cyan",
-	"white",
+static const char **colorname;
+static const char *palettes[][0x127] = {
 
-	[255] = 0,
+   // Dark mode:
+  {[0xff] = 0,
+   // Converted from CIE L*C*h* as indicated.
+   //            Code/Description  | Lightness | Chroma | Hue     |
+   "#2d2d2d", // 30m fg            |    3/16   |    0   |         |
+   "#fe6445", // 31m fg            |   10/16   |   max  | red     |
+   "#00af00", // 32m fg            |   10/16   |   max  | green   |
+   "#9c9c00", // 33m fg            |   10/16   |   max  | yellow  |
+   "#a87ffe", // 34m fg            |   10/16   |   max  | blue    |
+   "#fe35fd", // 35m fg            |   10/16   |   max  | magenta |
+   "#00a8a8", // 36m fg            |   10/16   |   max  | cyan    |
+   "#ededec", // 37m fg            |   15/16   |    0   |         |
+   "#3b3b3b", // 90m fg light      |    4/16   |    0   |         |
+   "#fea088", // 91m fg light      |   12/16   |   max  | red     |
+   "#00d600", // 92m fg light      |   12/16   |   max  | green   |
+   "#bebe00", // 93m fg light      |   12/16   |   max  | yellow  |
+   "#c8a9fe", // 94m fg light      |   12/16   |   max  | blue    |
+   "#fe90f9", // 95m fg light      |   12/16   |   max  | magenta |
+   "#00cdcd", // 96m fg light      |   12/16   |   max  | cyan    |
+   "#fefffe", // 97m fg light      |    1      |    0   |         |
+   "#000000", // 40m bg            |    0      |    0   |         |
+   "#d10000", // 41m bg            |    7/16   |   max  | red     |
+   "#007800", // 42m bg            |    7/16   |   max  | green   |
+   "#6b6b00", // 43m bg            |    7/16   |   max  | yellow  |
+   "#683efe", // 44m bg            |    7/16   |   max  | blue    |
+   "#b800b8", // 45m bg            |    7/16   |   max  | magenta |
+   "#007373", // 46m bg            |    7/16   |   max  | cyan    |
+   "#c9c9c9", // 47m bg            |   13/16   |    0   |         |
+   "#202020", // 100m bg light     |    2/16   |    0   |         |
+   "#fe371d", // 101m bg light     |    9/16   |   max  | red     |
+   "#009d00", // 102m bg light     |    9/16   |   max  | green   |
+   "#8b8b00", // 103m bg light     |    9/16   |   max  | yellow  |
+   "#966afe", // 104m bg light     |    9/16   |   max  | blue    |
+   "#ed00ed", // 105m bg light     |    9/16   |   max  | magenta |
+   "#009696", // 106m bg light     |    9/16   |   max  | cyan    |
+   "#dbdbdb", // 107m bg light     |   14/16   |    0   |         |
+   "#ededec", // defaultfg         |   15/16   |    0   |         |
+   "#191919", // defaultbg         |    1/11   |    0   |         |
+   "#ff0088", // defaultcs
+   "#00dd00", // defaultrcs
+   "#ffffff", // mousefg
+   "#000000", // mousebg
+   "#ffff00", // contrastfg
+  },
 
-	/* more colors can be added after 255 to use with DefaultXX */
-	"#cccccc",
-	"#555555",
-	"gray90", /* default foreground colour */
-	"black", /* default background colour */
+   // Light mode:
+  {[0xff] = 0,
+   // Converted from CIE L*C*h* as indicated.
+   //            Code/Description  | Lightness | Chroma | Hue     |
+   "#000000", // 30m fg            |    0      |    0   |         |
+   "#d10000", // 31m fg            |    7/16   |   max  | red     |
+   "#007800", // 32m fg            |    7/16   |   max  | green   |
+   "#6b6b00", // 33m fg            |    7/16   |   max  | yellow  |
+   "#683efe", // 34m fg            |    7/16   |   max  | blue    |
+   "#b800b8", // 35m fg            |    7/16   |   max  | magenta |
+   "#007373", // 36m fg            |    7/16   |   max  | cyan    |
+   "#c9c9c9", // 37m fg            |   13/16   |    0   |         |
+   "#131313", // 90m fg light      |    1/16   |    0   |         |
+   "#fe371d", // 91m fg light      |    9/16   |   max  | red     |
+   "#009d00", // 92m fg light      |    9/16   |   max  | green   |
+   "#8b8b00", // 93m fg light      |    9/16   |   max  | yellow  |
+   "#966afe", // 94m fg light      |    9/16   |   max  | blue    |
+   "#ed00ed", // 95m fg light      |    9/16   |   max  | magenta |
+   "#009696", // 96m fg light      |    9/16   |   max  | cyan    |
+   "#dbdbdb", // 97m fg light      |   14/16   |    0   |         |
+   "#2d2d2d", // 40m bg            |    3/16   |    0   |         |
+   "#fe6445", // 41m bg            |   10/16   |   max  | red     |
+   "#00af00", // 42m bg            |   10/16   |   max  | green   |
+   "#9c9c00", // 43m bg            |   10/16   |   max  | yellow  |
+   "#a87ffe", // 44m bg            |   10/16   |   max  | blue    |
+   "#fe35fd", // 45m bg            |   10/16   |   max  | magenta |
+   "#00a8a8", // 46m bg            |   10/16   |   max  | cyan    |
+   "#ededec", // 47m bg            |   15/16   |    0   |         |
+   "#3b3b3b", // 100m bg light     |    4/16   |    0   |         |
+   "#fea088", // 101m bg light     |   12/16   |   max  | red     |
+   "#00d600", // 102m bg light     |   12/16   |   max  | green   |
+   "#bebe00", // 103m bg light     |   12/16   |   max  | yellow  |
+   "#c8a9fe", // 104m bg light     |   12/16   |   max  | blue    |
+   "#fe90f9", // 105m bg light     |   12/16   |   max  | magenta |
+   "#00cdcd", // 106m bg light     |   12/16   |   max  | cyan    |
+   "#fefffe", // 107m bg light     |    1      |    0   |         |
+   "#131313", // defaultfg         |    1/16   |    0   |         |
+   "#e4e4e4", // defaultbg         |   10/11   |    0   |         |
+   "#ff0088", // defaultcs
+   "#00dd00", // defaultrcs
+   "#ffffff", // mousefg
+   "#000000", // mousebg
+   "#0000ff", // contrastfg
+  },
+
 };
 
 
 /*
  * Default colors (colorname index)
- * foreground, background, cursor, reverse cursor
+ * foreground, background, contrast, cursor, reverse cursor
  */
-unsigned int defaultfg = 258;
-unsigned int defaultbg = 259;
-unsigned int defaultcs = 256;
-static unsigned int defaultrcs = 257;
+unsigned int defaultfg = 0x120;
+unsigned int defaultbg = 0x121;
+unsigned int contrastfg = 0x126;
+unsigned int defaultcs = 0x122;
+static unsigned int defaultrcs = 0x123;
 
 /*
  * Default shape of cursor
@@ -144,7 +211,7 @@ static unsigned int defaultrcs = 257;
  * 6: Bar ("|")
  * 7: Snowman ("☃")
  */
-static unsigned int cursorshape = 2;
+static unsigned int cursorshape = 6;
 
 /*
  * Default columns and rows numbers
@@ -157,8 +224,8 @@ static unsigned int rows = 24;
  * Default colour and shape of the mouse cursor
  */
 static unsigned int mouseshape = XC_xterm;
-static unsigned int mousefg = 7;
-static unsigned int mousebg = 0;
+static unsigned int mousefg = 0x124;
+static unsigned int mousebg = 0x125;
 
 /*
  * Color used to display font attributes when fontconfig selected a font which
