@@ -79,11 +79,21 @@ const int boxdraw_bold = 0;
 /* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
 const int boxdraw_braille = 0;
 
-/*
- * bell volume. It must be a value between -100 and 100. Use 0 for disabling
- * it
- */
-static int bellvolume = 0;
+/* logic for when bell is enabled */
+#define BELLENABLED (!IS_SET(MODE_FULLY_VISIBLE))
+/* bell volume. It must be a value between -100 and 100. */
+static int bellvolume = 100;
+
+/* logic for when visual-bell is enabled */
+#define VBELLENABLED (IS_SET(MODE_VISIBLE))
+/* visual-bell timeout in ms */
+static int vbelltimeout = 150;
+
+/* choose predefined visual-bell cells to inverse, or define your own logic */
+// #define VBCELL x==0 || x==right || y==0 || y==bottom  /* border */
+// #define VBCELL 1  /* all cells - whole screen */
+// #define VBCELL y==bottom && x>right-2  /* bottom-right */
+#define VBCELL y==0 || y==bottom  /* top and bottom */
 
 /* default TERM value */
 char *termname = "st-256color";
