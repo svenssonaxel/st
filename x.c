@@ -1761,7 +1761,11 @@ xsetmode(int set, unsigned int flags)
 int
 xsetcursor(int cursor)
 {
-	if (!BETWEEN(cursor, 0, 7)) /* 7: st extension */
+	if (!BETWEEN(cursor, 0, 7) /* 7: st extension */
+            && cursor != 8
+            && cursor != 11
+            && cursor != 12
+            )
 		return 1;
 	win.cursor = cursor;
 	return 0;
